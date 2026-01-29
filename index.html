@@ -24,7 +24,7 @@
                 <img src="logo.png" alt="Logo Defensoría" class="header-logo">
                 <span>DEFENSORÍA DEL PUEBLO</span>
             </div>
-            <div class="badge">Prevención de Conflictos</div>
+            <div class="badge">Adjuntía para la Prevención de Conflictos Sociales y la Gobernabilidad</div>
             <button id="admin-link" class="admin-link">Admin 🔒</button>
         </div>
     </header>
@@ -59,15 +59,56 @@
                     <input type="text" id="acp-supervisor" placeholder="Tu nombre completo" required>
                 </div>
                 <div class="form-group">
-                    <label for="acp-office">Oficina / Adjuntía</label>
-                    <select id="acp-office" required>
-                        <option value="" disabled selected>Selecciona tu oficina...</option>
-                        <option value="Adjuntía para la Prevención de Conflictos">Adjuntía para la Prevención de Conflictos</option>
-                        <option value="Oficina Defensorial de Lima">Oficina Defensorial de Lima</option>
-                        <option value="Oficina Defensorial de Callao">Oficina Defensorial de Callao</option>
-                        <option value="Sede Central">Sede Central</option>
-                        <option value="Otros">Otros</option>
-                    </select>
+                    <label for="acp-office">OD/MOD</label>
+                    <input type="text" id="acp-office" list="acp-office-list" placeholder="Escribe para buscar..."
+                        required>
+                    <datalist id="acp-office-list">
+                        <option value="OD Amazonas">
+                        <option value="OD Áncash">
+                        <option value="OD Apurímac">
+                        <option value="OD Arequipa">
+                        <option value="OD Ayacucho">
+                        <option value="OD Cajamarca">
+                        <option value="OD Callao">
+                        <option value="OD Cusco">
+                        <option value="OD Huánuco">
+                        <option value="OD Huancavelica">
+                        <option value="OD Ica">
+                        <option value="OD Junín">
+                        <option value="OD La Libertad">
+                        <option value="OD Lambayeque">
+                        <option value="OD Loreto">
+                        <option value="OD Lima">
+                        <option value="OD Lima Este">
+                        <option value="OD Lima Norte">
+                        <option value="OD Lima Sur">
+                        <option value="OD Lima Provincias">
+                        <option value="OD Madre de Dios">
+                        <option value="OD Moquegua">
+                        <option value="OD Pasco">
+                        <option value="OD Piura">
+                        <option value="OD Puno">
+                        <option value="OD San Martín">
+                        <option value="OD Tacna">
+                        <option value="OD Tumbes">
+                        <option value="OD Ucayali">
+                        <option value="MOD Atalaya">
+                        <option value="MOD Purus">
+                        <option value="MOD Andahuaylas">
+                        <option value="OD Chimbote">
+                        <option value="MOD Huanta">
+                        <option value="MOD Jaén">
+                        <option value="MOD Juliaca">
+                        <option value="MOD La Merced">
+                        <option value="MOD Satipo">
+                        <option value="OD Tarapoto">
+                        <option value="MOD La Convención">
+                        <option value="OD Tingo María">
+                        <option value="MOD Pichari">
+                        <option value="MOD Puquio">
+                        <option value="MOD Desaguadero">
+                        <option value="MOD Aguas Verdes">
+                    </datalist>
                 </div>
                 <div class="form-group">
                     <label for="acp-date">Fecha de la Supervisión</label>
@@ -93,15 +134,131 @@
             </div>
             <form id="start-form">
                 <div class="form-group">
-                    <label for="office">Oficina / Adjuntía</label>
-                    <select id="office" required>
-                        <option value="" disabled selected>Selecciona tu oficina...</option>
-                        <option value="Adjuntía para la Prevención de Conflictos">Adjuntía para la Prevención de Conflictos</option>
-                        <option value="Oficina Defensorial de Lima">Oficina Defensorial de Lima</option>
-                        <option value="Oficina Defensorial de Callao">Oficina Defensorial de Callao</option>
-                        <option value="Sede Central">Sede Central</option>
-                        <option value="Otros">Otros</option>
-                    </select>
+                    <label for="office">Oficina / Adjuntía / Sede</label>
+                    <input type="text" id="office" list="office-list" placeholder="Escribe para buscar oficina..."
+                        required>
+                    <datalist id="office-list">
+                        <option value="OD Amazonas">
+                        <option value="OD Áncash">
+                        <option value="OD Apurímac">
+                        <option value="OD Arequipa">
+                        <option value="OD Ayacucho">
+                        <option value="OD Cajamarca">
+                        <option value="OD Callao">
+                        <option value="OD Cusco">
+                        <option value="OD Huánuco">
+                        <option value="OD Huancavelica">
+                        <option value="OD Ica">
+                        <option value="OD Junín">
+                        <option value="OD La Libertad">
+                        <option value="OD Lambayeque">
+                        <option value="OD Loreto">
+                        <option value="OD Lima">
+                        <option value="OD Lima Este">
+                        <option value="OD Lima Norte">
+                        <option value="OD Lima Sur">
+                        <option value="OD Lima Provincias">
+                        <option value="OD Madre de Dios">
+                        <option value="OD Moquegua">
+                        <option value="OD Pasco">
+                        <option value="OD Piura">
+                        <option value="OD Puno">
+                        <option value="OD San Martín">
+                        <option value="OD Tacna">
+                        <option value="OD Tumbes">
+                        <option value="OD Ucayali">
+                        <option value="MOD Atalaya">
+                        <option value="MOD Purus">
+                        <option value="MOD Andahuaylas">
+                        <option value="OD Chimbote">
+                        <option value="MOD Huanta">
+                        <option value="MOD Jaén">
+                        <option value="MOD Juliaca">
+                        <option value="MOD La Merced">
+                        <option value="MOD Satipo">
+                        <option value="OD Tarapoto">
+                        <option value="MOD La Convención">
+                        <option value="OD Tingo María">
+                        <option value="MOD Pichari">
+                        <option value="MOD Puquio">
+                        <option value="MOD Desaguadero">
+                        <option value="MOD Aguas Verdes">
+                        <option value="Despacho del Defensor del Pueblo">
+                        <option value="Primera Adjuntía">
+                        <option value="Adjuntía de Lucha contra la Corrupción, Transparencia y Eficiencia del Estado">
+                        <option value="Adjuntía del Medio Ambiente, Servicios Públicos y Pueblos Indígenas">
+                        <option value="Adjuntía del Medio Ambiente, Cambio Climático y Pueblos Indígenas">
+                        <option value="Adjuntía en Asuntos Constitucionales">
+                        <option value="Adjuntía para el Derecho a la Educación">
+                        <option value="Adjuntía para el Derecho a la Salud">
+                        <option value="Adjuntía para la Administración Estatal">
+                        <option value="Adjuntía para la Descentralización y Desarrollo Socioeconómico">
+                        <option value="Adjuntía para la Niñez y Adolescencia">
+                        <option value="Adjuntía para la Prevención de Conflictos Sociales y la Gobernabilidad">
+                        <option
+                            value="Adjuntía para la Seguridad Ciudadana, Seguridad Nacional y la Lucha contra las Drogas">
+                        <option value="Adjuntía para los Derechos de la Mujer">
+                        <option value="Adjuntía para los Derechos Humanos y Personas con Discapacidad">
+                        <option value="Centro de Estudios Defensoriales">
+                        <option value="Centro de Información">
+                        <option value="Dirección de Atención al Pueblo">
+                        <option value="Dirección de Atención Virtual a la Ciudadanía">
+                        <option value="Dirección de Coordinación Territorial">
+                        <option value="Dirección del Mecanismo Nacional de Prevención de la Tortura">
+                        <option value="Dirección de Litigio Estratégico">
+                        <option value="Gabinete">
+                        <option value="Oficina General de Administración y Finanzas">
+                        <option value="Área de Contabilidad">
+                        <option value="Oficina de Contabilidad">
+                        <option value="Área de Infraestructura y Seguridad Integral">
+                        <option value="Oficina de Infraestructura y Seguridad Integral">
+                        <option value="Área de Logística">
+                        <option value="Área de Tesorería">
+                        <option value="Oficina de Tesorería">
+                        <option value="Control Previo">
+                        <option value="Control Patrimonial">
+                        <option value="Oficina de Control Patrimonial">
+                        <option value="Oficina de Administración y Finanzas">
+                        <option value="Oficina de Asesoría Jurídica">
+                        <option value="Oficina General de Asesoría Jurídica">
+                        <option value="Oficina de Asuntos Contractuales y Sistemas Administrativos">
+                        <option
+                            value="Oficina de Asuntos Laborales, Simplificación Administrativa y Cooperación Internacional">
+                        <option value="Oficina de Comunicaciones e Imagen Institucional">
+                        <option value="Oficina General de Comunicaciones e Imagen Institucional">
+                        <option value="Oficina de Control Institucional">
+                        <option value="Oficina de Gestión y Desarrollo Humano">
+                        <option value="Oficina General de Gestión y Desarrollo Humano">
+                        <option value="Oficina de Remuneraciones y Beneficios">
+                        <option value="Oficina de Desarrollo y Bienestar Social">
+                        <option value="Oficina de Desarrollo Estratégico y Cooperación Internacional">
+                        <option value="Oficina de Cooperación Internacional">
+                        <option value="Oficina de Planeamiento y Presupuesto">
+                        <option value="Oficina General de Planeamiento y Presupuesto">
+                        <option value="Oficina de Planeamiento">
+                        <option value="Oficina de Presupuesto">
+                        <option value="Oficina de Modernización">
+                        <option value="Oficina de Estadística">
+                        <option value="Oficina General de Tecnologías, Innovación y Transformación Digital">
+                        <option value="Oficina de Ingeniería de Software">
+                        <option value="Oficina de Infraestructura Tecnológica">
+                        <option value="Oficina de Soporte Técnico">
+                        <option
+                            value="Programa de Defensa y Promoción de los Derechos de las Personas con Discapacidad">
+                        <option value="Programa de Investigaciones Especiales en Derechos Humanos">
+                        <option value="Programa de Pueblos Indígenas">
+                        <option value="Programa para la Supervisión de Contrataciones e Inversiones Públicas">
+                        <option value="Programa para las Personas Privadas de la Libertad">
+                        <option value="Programa para los Derechos de las Personas Migrantes">
+                        <option value="Programa para los Derechos de las Personas en Movilidad Humana">
+                        <option value="Programa Rompiendo Cadenas">
+                        <option value="Programa de Litigio Estratégico">
+                        <option value="Secretaría General">
+                        <option value="SG - Gestión Documentaria y Archivo">
+                        <option value="Oficina de Gestión Documentaria y Archivo">
+                        <option value="Oficina de Integridad Institucional">
+                        <option value="Secretaría Técnica Especializada">
+                    </datalist>
                 </div>
                 <div class="form-group">
                     <label for="name">Nombre del Supervisor</label>
@@ -110,25 +267,21 @@
                 <div class="form-group">
                     <label for="category">Categoría de Supervisión</label>
                     <select id="category" required>
-                        <option value="" disabled selected>¿Qué estás supervisando?</option>
-                        <option value="Punto">Punto (Protesta/Concentración)</option>
-                        <option value="Comisaría">Comisaría</option>
-                        <option value="Cámaras">Cámaras de Vigilancia</option>
-                        <option value="Hospital">Hospital / Centro de Salud</option>
+                        <option value="" disabled selected>Selecciona categoría...</option>
+                        <option value="Punto">Punto</option>
+                        <option value="Dependencia policial / Seguridad del Estado">Dependencia policial / Seguridad del
+                            Estado</option>
+                        <option value="Establecimiento de salud">Establecimiento de salud</option>
+                        <option value="Videovigilancia">Videovigilancia</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label for="location">Punto de Supervisión</label>
-                    <select id="location" required>
-                        <option value="" disabled selected>Selecciona la ubicación...</option>
-                        <option value="Plaza San Martín">Plaza San Martín</option>
-                        <option value="Congreso de la República">Congreso de la República</option>
-                        <option value="Palacio de Justicia">Palacio de Justicia</option>
-                        <option value="Ministerio del Interior">Ministerio del Interior</option>
-                        <option value="Avenida Abancay">Avenida Abancay</option>
-                        <option value="Vía Expresa">Vía Expresa</option>
-                        <option value="Otros">Otros (Punto Externo)</option>
-                    </select>
+                    <input type="text" id="location" list="location-list" placeholder="Escribe para buscar ubicación..."
+                        required>
+                    <datalist id="location-list">
+                        <!-- Se puebla dinámicamente desde app.js -->
+                    </datalist>
                 </div>
                 <div class="form-group">
                     <label for="date">Fecha de la Supervisión</label>
@@ -136,7 +289,8 @@
                 </div>
                 <div class="form-group">
                     <label for="observations">Observaciones / Comentarios</label>
-                    <textarea id="observations" rows="3" placeholder="Detalles adicionales, incidencias, etc."></textarea>
+                    <textarea id="observations" rows="3"
+                        placeholder="Detalles adicionales, incidencias, etc."></textarea>
                 </div>
                 <button type="submit" class="btn-primary">Iniciar Supervisión</button>
             </form>

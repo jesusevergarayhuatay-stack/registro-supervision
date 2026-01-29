@@ -11,7 +11,7 @@ if ('serviceWorker' in navigator) {
 const GOOGLE_SHEETS_URL = "";
 
 // Clave simple para el modo Admin
-const ADMIN_PASSWORD = "1234";
+const ADMIN_PASSWORD = "Defensoria2026";
 
 // Variables de Estado
 // Variables de Estado
@@ -130,6 +130,47 @@ function updateTimer() {
 choiceAcpBtn.addEventListener('click', showAcpForm);
 choicePlanBtn.addEventListener('click', showPlanForm);
 backBtns.forEach(btn => btn.addEventListener('click', showSelectionScreen));
+
+// Lógica de Desplegables Dinámicos para Plan de Despliegue
+const categorySelect = document.getElementById('category');
+const locationInput = document.getElementById('location');
+const locationDatalist = document.getElementById('location-list');
+
+const locationOptions = {
+    'Punto': [
+        "Congreso", "Fiscalía", "Parque Universitario", "Plaza San Martín",
+        "Plaza Dos de Mayo", "Plaza Manco Cápac", "Alameda Paseo de los Héroes Navales",
+        "Óvalo Grau", "Óvalo Bolognesi"
+    ],
+    'Dependencia policial / Seguridad del Estado': [
+        "Comisaría Alfonso Ugarte", "Comisaría Cotabambas", "Comisaría de Mujeres",
+        "Comisaría PNP San Andrés", "División de Asuntos Sociales", "Comisaría de Piedra Liza"
+    ],
+    'Establecimiento de salud': [
+        "Hospital Nacional Arzobispo Loayza", "Emergencias Grau", "Hospital Nacional Guillermo Almenara",
+        "Hospital Edgardo Rebagliati Martins", "Hospital Nacional Dos de Mayo",
+        "Hospital PNP Augusto B. Leguía", "Hospital Nacional PNP Luis N Saenz"
+    ],
+    'Videovigilancia': [
+        "Centro de Monitoreo", "Cámaras - Municipalidad", "Cámaras - PNP"
+    ]
+};
+
+categorySelect.addEventListener('change', () => {
+    const selectedCategory = categorySelect.value;
+    const options = locationOptions[selectedCategory] || [];
+
+    // Limpiar input y datalist
+    locationInput.value = "";
+    locationDatalist.innerHTML = "";
+
+    // Poblar nuevas opciones
+    options.forEach(opt => {
+        const optionNode = document.createElement('option');
+        optionNode.value = opt;
+        locationDatalist.appendChild(optionNode);
+    });
+});
 
 // Manejadores de Formularios
 acpForm.addEventListener('submit', (e) => {
@@ -265,10 +306,12 @@ function renderHistory() {
         const endStr = new Date(item.endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         const durationH = (item.duration / 3600000).toFixed(2);
 
+        const title = item.type === 'ACP' ? `ACP: ${item.acpName}` : `${item.location} (${item.category})`;
+
         return `
             <div class="history-item">
                 <div class="header">
-                    <span>${item.location} (${item.category})</span>
+                    <span>${title}</span>
                     <span>${dateStr}</span>
                 </div>
                 <div class="details">
