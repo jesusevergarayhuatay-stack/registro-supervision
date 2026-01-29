@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Defensoría del Pueblo - Registro de Supervisión</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#003366">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="DP Supervisión">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <img src="logo.png" alt="Logo Defensoría" class="header-logo">
+                <span>DEFENSORÍA DEL PUEBLO</span>
+            </div>
+            <div class="badge">Prevención de Conflictos</div>
+            <button id="admin-link" class="admin-link">Admin 🔒</button>
+        </div>
+    </header>
+
+    <main id="app">
+        <!-- Pantalla de Selección Inicial -->
+        <section id="selection-section" class="card">
+            <h2>¿Qué vas a supervisar hoy?</h2>
+            <div class="selection-grid">
+                <button id="choice-acp" class="selection-card">
+                    <span class="icon">📢</span>
+                    <span class="label">Supervisión de una ACP</span>
+                    <span class="desc">Acción Colectiva de Protesta</span>
+                </button>
+                <button id="choice-plan" class="selection-card">
+                    <span class="icon">📋</span>
+                    <span class="label">Plan de Despliegue</span>
+                    <span class="desc">Supervisión según operativo programado</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Formulario ACP -->
+        <section id="acp-section" class="card hidden">
+            <div class="section-header">
+                <button class="back-link">← Volver</button>
+                <h2>Nueva Supervisión ACP</h2>
+            </div>
+            <form id="acp-form">
+                <div class="form-group">
+                    <label for="acp-supervisor">Nombre del Supervisor</label>
+                    <input type="text" id="acp-supervisor" placeholder="Tu nombre completo" required>
+                </div>
+                <div class="form-group">
+                    <label for="acp-office">Oficina / Adjuntía</label>
+                    <select id="acp-office" required>
+                        <option value="" disabled selected>Selecciona tu oficina...</option>
+                        <option value="Adjuntía para la Prevención de Conflictos">Adjuntía para la Prevención de Conflictos</option>
+                        <option value="Oficina Defensorial de Lima">Oficina Defensorial de Lima</option>
+                        <option value="Oficina Defensorial de Callao">Oficina Defensorial de Callao</option>
+                        <option value="Sede Central">Sede Central</option>
+                        <option value="Otros">Otros</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="acp-date">Fecha de la Supervisión</label>
+                    <input type="date" id="acp-date" required>
+                </div>
+                <div class="form-group">
+                    <label for="acp-name">Nombre de la ACP</label>
+                    <input type="text" id="acp-name" placeholder="Ej: Marcha contra..." required>
+                </div>
+                <div class="form-group">
+                    <label for="acp-observations">Observaciones / Comentarios</label>
+                    <textarea id="acp-observations" rows="3" placeholder="Detalles adicionales..."></textarea>
+                </div>
+                <button type="submit" class="btn-primary">Registrar ACP</button>
+            </form>
+        </section>
+
+        <!-- Formulario Plan de Despliegue (Existente) -->
+        <section id="start-section" class="card hidden">
+            <div class="section-header">
+                <button class="back-link">← Volver</button>
+                <h2>Plan de Despliegue</h2>
+            </div>
+            <form id="start-form">
+                <div class="form-group">
+                    <label for="office">Oficina / Adjuntía</label>
+                    <select id="office" required>
+                        <option value="" disabled selected>Selecciona tu oficina...</option>
+                        <option value="Adjuntía para la Prevención de Conflictos">Adjuntía para la Prevención de Conflictos</option>
+                        <option value="Oficina Defensorial de Lima">Oficina Defensorial de Lima</option>
+                        <option value="Oficina Defensorial de Callao">Oficina Defensorial de Callao</option>
+                        <option value="Sede Central">Sede Central</option>
+                        <option value="Otros">Otros</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="name">Nombre del Supervisor</label>
+                    <input type="text" id="name" placeholder="Tu nombre completo" required>
+                </div>
+                <div class="form-group">
+                    <label for="category">Categoría de Supervisión</label>
+                    <select id="category" required>
+                        <option value="" disabled selected>¿Qué estás supervisando?</option>
+                        <option value="Punto">Punto (Protesta/Concentración)</option>
+                        <option value="Comisaría">Comisaría</option>
+                        <option value="Cámaras">Cámaras de Vigilancia</option>
+                        <option value="Hospital">Hospital / Centro de Salud</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="location">Punto de Supervisión</label>
+                    <select id="location" required>
+                        <option value="" disabled selected>Selecciona la ubicación...</option>
+                        <option value="Plaza San Martín">Plaza San Martín</option>
+                        <option value="Congreso de la República">Congreso de la República</option>
+                        <option value="Palacio de Justicia">Palacio de Justicia</option>
+                        <option value="Ministerio del Interior">Ministerio del Interior</option>
+                        <option value="Avenida Abancay">Avenida Abancay</option>
+                        <option value="Vía Expresa">Vía Expresa</option>
+                        <option value="Otros">Otros (Punto Externo)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="date">Fecha de la Supervisión</label>
+                    <input type="date" id="date" required>
+                </div>
+                <div class="form-group">
+                    <label for="observations">Observaciones / Comentarios</label>
+                    <textarea id="observations" rows="3" placeholder="Detalles adicionales, incidencias, etc."></textarea>
+                </div>
+                <button type="submit" class="btn-primary">Iniciar Supervisión</button>
+            </form>
+        </section>
+
+        <!-- Sesión Activa -->
+        <section id="active-section" class="card hidden">
+            <div class="active-header">
+                <span class="status-dot"></span>
+                <h3>Supervisión en Curso</h3>
+            </div>
+            <div id="active-info">
+                <p><strong>Punto:</strong> <span id="display-location"></span></p>
+                <p><strong>Inicio:</strong> <span id="display-start"></span></p>
+            </div>
+            <div class="timer" id="timer">00:00:00</div>
+            <button id="finish-btn" class="btn-danger">Finalizar Supervisión</button>
+        </section>
+
+        <!-- Historial -->
+        <section id="history-section" class="card">
+            <div class="history-header">
+                <h2>Historial de Registros</h2>
+                <button id="export-btn" class="btn-secondary">Exportar</button>
+            </div>
+            <div id="history-list" class="history-list">
+                <!-- Se llenará dinámicamente -->
+                <p class="empty-msg">No hay registros previos.</p>
+            </div>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
