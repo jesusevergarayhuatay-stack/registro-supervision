@@ -8,7 +8,7 @@ if ('serviceWorker' in navigator) {
 }
 
 // CONFIGURACIÓN: Reemplaza esto con la URL que obtendrás de Google Apps Script
-const GOOGLE_SHEETS_URL = "";
+const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbwwR8kSUUltCJxJoYgniqLltZpjoJjzvDuSRfBT-xqKoQ93a-YZMUzKM3GgKaWAgLCVvw/exec";
 
 // Clave simple para el modo Admin
 const ADMIN_PASSWORD = "Defensoria2026";
@@ -251,8 +251,8 @@ async function sendToGoogleSheets(data) {
             fecha: data.date,
             oficina: data.office,
             supervisor: data.name,
-            categoria: data.category,
-            punto: data.location,
+            categoria: data.type === 'ACP' ? 'ACP' : data.category,
+            punto: data.type === 'ACP' ? data.acpName : data.location,
             inicio: new Date(data.startTime).toLocaleTimeString(),
             fin: new Date(data.endTime).toLocaleTimeString(),
             duracion: durationH,
