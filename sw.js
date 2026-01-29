@@ -1,4 +1,4 @@
-const CACHE_NAME = 'dp-supervision-v1';
+const CACHE_NAME = 'dp-supervision-v2';
 const ASSETS = [
     './',
     './index.html',
