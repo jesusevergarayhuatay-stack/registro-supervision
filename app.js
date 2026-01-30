@@ -8,7 +8,7 @@ if ('serviceWorker' in navigator) {
 }
 
 // CONFIGURACIÓN: Reemplaza esto con la URL que obtendrás de Google Apps Script
-const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbwwU477Azr8eb-Bz-bA4zAbHtjVtrU7nIVGFduCQiB_48yevcfeK24oZ7ozSBXLpAUgtQ/exec";
+const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbw9PEFhRsWhG07EcBpnriKwB9rV-pHkgYnDLavGuO7knL_Os9OPwQW5Df2nDalazHpdIQ/exec";
 const ADMIN_PASSWORD = "Defensoria2026";
 
 // Variables de Estado
