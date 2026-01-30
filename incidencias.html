@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reporte de Incidencias</title>
+    <link rel="stylesheet" href="style-incidencias.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <h1>🔍 Reportar Incidencia</h1>
+
+        <form id="supervisionForm">
+            <div class="form-group">
+                <label for="oficina">🏢 Oficina</label>
+                <select id="oficina" name="oficina" required>
+                    <option value="" disabled selected>Selecciona una oficina</option>
+                    <!-- Se llena desde JS -->
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="supervisor">👤 Nombre del Supervisor</label>
+                <input type="text" id="supervisor" name="supervisor" placeholder="Tu nombre completo" required>
+            </div>
+
+            <div class="form-group">
+                <label for="fecha">📅 Fecha</label>
+                <input type="date" id="fecha" name="fecha" required>
+            </div>
+
+            <div class="form-group">
+                <label for="categoria">🏷️ Categoría</label>
+                <select id="categoria" name="categoria" required>
+                    <option value="" disabled selected>Selecciona categoría</option>
+                    <!-- Se llena desde JS -->
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="ubicacion">📍 Ubicación Específica</label>
+                <select id="ubicacion" name="ubicacion" required>
+                    <option value="" disabled selected>Selecciona ubicación</option>
+                    <!-- Se llena desde JS -->
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="observaciones">📝 Descripción de la Incidencia</label>
+                <textarea id="observaciones" name="observaciones" rows="4"
+                    placeholder="Describe detalladamente lo observado..." required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="fotos">📷 Evidencia Fotográfica</label>
+                <input type="file" id="fotos" name="fotos" accept="image/*" multiple>
+            </div>
+
+            <button type="submit" id="submitBtn">
+                <span class="btn-text">Enviar Reporte</span>
+                <div class="spinner hidden loading-spinner"></div>
+            </button>
+        </form>
+
+        <div id="successMessage" class="success-message">
+            <span class="success-icon">✅</span>
+            <h2>¡Reporte Enviado!</h2>
+            <p>La incidencia ha sido registrada correctamente.</p>
+            <button onclick="location.reload()" style="margin-top: 20px;">Nuevo Reporte</button>
+        </div>
+    </div>
+
+    <script src="script-incidencias.js"></script>
+</body>
+
+</html>
