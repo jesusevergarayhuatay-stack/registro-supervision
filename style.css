@@ -346,6 +346,16 @@ button:active {
     font-size: 0.8rem;
 }
 
+.badge-type {
+    background: #e2e8f0;
+    color: var(--primary);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    margin-right: 0.5rem;
+    font-weight: 600;
+}
+
 .weekend-tag {
     background: #fef3c7;
     color: #92400e;

@@ -35,25 +35,37 @@
             <h2>¿Qué vas a supervisar hoy?</h2>
             <div class="selection-grid">
                 <button id="choice-acp" class="selection-card">
-                    <span class="icon">📢</span>
-                    <span class="label">Supervisión de una ACP</span>
-                    <span class="desc">Acción Colectiva de Protesta</span>
+                    <span class="icon">🏢</span>
+                    <span class="label">Supervisión en Oficina Desconcentrada</span>
+                    <span class="desc">Registro de supervisión en OD/MOD</span>
                 </button>
                 <button id="choice-plan" class="selection-card">
-                    <span class="icon">📋</span>
-                    <span class="label">Plan de Despliegue</span>
-                    <span class="desc">Supervisión según operativo programado</span>
+                    <span class="icon">🏛️</span>
+                    <span class="label">Supervisión Lima (Sede Central)</span>
+                    <span class="desc">Oficina Principal / Sede Central</span>
                 </button>
             </div>
         </section>
 
-        <!-- Formulario ACP -->
+        <!-- Formulario OD (Antes ACP) -->
         <section id="acp-section" class="card hidden">
             <div class="section-header">
                 <button class="back-link">← Volver</button>
-                <h2>Nueva Supervisión ACP</h2>
+                <h2>Supervisión en Oficina Desconcentrada</h2>
             </div>
             <form id="acp-form">
+                <div class="form-group">
+                    <label for="acp-category">Categoría de Supervisión</label>
+                    <select id="acp-category" required>
+                        <option value="" disabled selected>Selecciona categoría...</option>
+                        <option value="Punto">Punto</option>
+                        <option value="Dependencia policial / Seguridad del Estado">Dependencia policial / Seguridad del
+                            Estado</option>
+                        <option value="Establecimiento de salud">Establecimiento de salud</option>
+                        <option value="Videovigilancia">Videovigilancia</option>
+                        <option value="Otro">Otro</option>
+                    </select>
+                </div>
                 <div class="form-group">
                     <label for="acp-supervisor">Nombre del Supervisor</label>
                     <input type="text" id="acp-supervisor" placeholder="Tu nombre completo" required>
@@ -112,27 +124,43 @@
                 </div>
                 <div class="form-group">
                     <label for="acp-date">Fecha de la Supervisión</label>
-                    <input type="date" id="acp-date" required>
+                    <input type="date" id="acp-date" readonly required>
                 </div>
                 <div class="form-group">
-                    <label for="acp-name">Nombre de la ACP</label>
-                    <input type="text" id="acp-name" placeholder="Ej: Marcha contra..." required>
+                    <label for="acp-location">Punto de Supervisión</label>
+                    <input type="text" id="acp-location" placeholder="Escribe el punto..." required>
+                </div>
+                <div class="form-group">
+                    <label for="acp-media">Foto o Video (Opcional)</label>
+                    <input type="file" id="acp-media" accept="image/*,video/*">
                 </div>
                 <div class="form-group">
                     <label for="acp-observations">Observaciones / Comentarios</label>
                     <textarea id="acp-observations" rows="3" placeholder="Detalles adicionales..."></textarea>
                 </div>
-                <button type="submit" class="btn-primary">Registrar ACP</button>
+                <div class="form-group">
+                    <p class="geo-hint" style="color: #666; font-size: 0.9em; margin-bottom: 10px;">📍 La ubicación se
+                        registrará automáticamente al iniciar.</p>
+                </div>
+                <button type="submit" class="btn-primary">Registrar e Iniciar</button>
             </form>
         </section>
 
-        <!-- Formulario Plan de Despliegue (Existente) -->
+        <!-- Formulario Sede Central (Antes Plan) -->
         <section id="start-section" class="card hidden">
             <div class="section-header">
                 <button class="back-link">← Volver</button>
-                <h2>Plan de Despliegue</h2>
+                <h2>Supervisión Lima (Sede Central)</h2>
             </div>
             <form id="start-form">
+                <div class="form-group">
+                    <label for="shift">Turno</label>
+                    <select id="shift" required>
+                        <option value="" disabled selected>Selecciona turno...</option>
+                        <option value="1er Turno">1er Turno</option>
+                        <option value="2do Turno">2do Turno</option>
+                    </select>
+                </div>
                 <div class="form-group">
                     <label for="office">Oficina / Adjuntía / Sede</label>
                     <input type="text" id="office" list="office-list" placeholder="Escribe para buscar oficina..."
@@ -265,6 +293,10 @@
                     <input type="text" id="name" placeholder="Tu nombre completo" required>
                 </div>
                 <div class="form-group">
+                    <label for="protest-name">Nombre de la Protesta</label>
+                    <input type="text" id="protest-name" placeholder="Nombre del colectivo o marcha" required>
+                </div>
+                <div class="form-group">
                     <label for="category">Categoría de Supervisión</label>
                     <select id="category" required>
                         <option value="" disabled selected>Selecciona categoría...</option>
@@ -277,7 +309,7 @@
                 </div>
                 <div class="form-group">
                     <label for="location">Punto de Supervisión</label>
-                    <input type="text" id="location" list="location-list" placeholder="Escribe para buscar ubicación..."
+                    <input type="text" id="location" list="location-list" placeholder="Escribe o selecciona..."
                         required>
                     <datalist id="location-list">
                         <!-- Se puebla dinámicamente desde app.js -->
@@ -285,12 +317,20 @@
                 </div>
                 <div class="form-group">
                     <label for="date">Fecha de la Supervisión</label>
-                    <input type="date" id="date" required>
+                    <input type="date" id="date" readonly required>
+                </div>
+                <div class="form-group">
+                    <label for="media">Foto o Video (Opcional)</label>
+                    <input type="file" id="media" accept="image/*,video/*">
                 </div>
                 <div class="form-group">
                     <label for="observations">Observaciones / Comentarios</label>
                     <textarea id="observations" rows="3"
                         placeholder="Detalles adicionales, incidencias, etc."></textarea>
+                </div>
+                <div class="form-group">
+                    <p class="geo-hint" style="color: #666; font-size: 0.9em; margin-bottom: 10px;">📍 La ubicación se
+                        registrará automáticamente al iniciar.</p>
                 </div>
                 <button type="submit" class="btn-primary">Iniciar Supervisión</button>
             </form>
@@ -305,8 +345,13 @@
             <div id="active-info">
                 <p><strong>Punto:</strong> <span id="display-location"></span></p>
                 <p><strong>Inicio:</strong> <span id="display-start"></span></p>
+                <p><strong>GPS Inicio:</strong> <span id="display-start-geo">Pendiente...</span></p>
             </div>
             <div class="timer" id="timer">00:00:00</div>
+            <div class="form-group">
+                <p class="geo-hint" style="color: #666; font-size: 0.9em; margin-bottom: 10px; text-align: center;">📍
+                    Al finalizar se registrará tu ubicación final.</p>
+            </div>
             <button id="finish-btn" class="btn-danger">Finalizar Supervisión</button>
         </section>
 
