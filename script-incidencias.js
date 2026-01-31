@@ -445,18 +445,18 @@ function isWeekend(date) {
     return day === 0 || day === 6;
 }
 
-// Admin y Export
-adminLink.addEventListener('click', () => {
-    const pass = prompt('Ingrese clave de administrador:');
-    if (pass === ADMIN_PASSWORD) {
-        if (GOOGLE_SHEETS_URL) {
-            const sheetEditUrl = GOOGLE_SHEETS_URL.split('/exec')[0] + '/edit';
-            window.open(sheetEditUrl, '_blank');
+// Defensor Dashboard Link
+const defensorLink = document.getElementById('defensor-link');
+if (defensorLink) {
+    defensorLink.addEventListener('click', () => {
+        const pass = prompt('Ingrese clave de acceso:');
+        if (pass === ADMIN_PASSWORD) {
+            window.location.href = 'defensor.html';
+        } else {
+            alert('Clave incorrecta');
         }
-    } else {
-        alert('Clave incorrecta');
-    }
-});
+    });
+}
 
 function renderHistory() {
     if (history.length === 0) {
