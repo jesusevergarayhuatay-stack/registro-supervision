@@ -291,7 +291,7 @@ acpForm.addEventListener('submit', async (e) => {
             incidents: []
         };
 
-        saveAndShowActive();
+        saveAndShowActive(true);
     } catch (err) {
         console.error(err);
         alert("Error al iniciar: " + err.message);
@@ -346,7 +346,7 @@ startForm.addEventListener('submit', async (e) => {
             incidents: []
         };
 
-        saveAndShowActive();
+        saveAndShowActive(true);
     } catch (err) {
         console.error(err);
         alert("Error al iniciar: " + err.message);
@@ -356,9 +356,85 @@ startForm.addEventListener('submit', async (e) => {
     }
 });
 
-function saveAndShowActive() {
+// --- SINCRONIZACIÓN EN TIEMPO REAL (v3.0) ---
+
+async function syncWithCloud(action, data, extraPayload = {}) {
+    if (!GOOGLE_SHEETS_URL) return;
+
+    try {
+        console.log(`Sincronizando: ${action}...`);
+
+        // Preparar payload base con campos comunes
+        const payload = {
+            action: action, // 'start', 'incident', 'finish'
+            sessionId: data.sessionId,
+            fecha: data.date,
+            tipo_registro: data.type === 'OD' ? 'Oficina Desconcentrada' : 'Sede Central',
+            turno: data.shift || "",
+            oficina: data.office,
+            supervisor: data.name,
+            nombre_protesta: data.protestName || "",
+            categoria: data.category,
+            punto: data.location,
+            inicio: new Date(data.startTime).toLocaleTimeString(),
+            fin_de_semana: isWeekend(new Date(data.startTime)) ? 'Sí' : 'No',
+            // En 'start', estos pueden ir medio vacíos, pero los mandamos igual
+            observaciones: data.observations || "",
+            // Incidencias se mandan completas siempre para mantener sync
+            incidencias: data.incidents || [],
+
+            // Campos específicos de actualización
+            ...extraPayload
+        };
+
+        // En 'start', mandamos todo lo inicial
+        if (action === 'start') {
+            payload.archivo = data.mediaFile || "";
+            payload.mediaData = data.mediaData || "";
+            payload.mediaType = data.mediaType || "";
+            payload.lat_inicio = data.startGeo ? data.startGeo.lat : "";
+            payload.lng_inicio = data.startGeo ? data.startGeo.lng : "";
+        }
+
+        // En 'finish', mandamos cierre
+        if (action === 'finish') {
+            const durationH = (data.duration / 3600000).toFixed(2);
+            payload.fin = new Date(data.endTime).toLocaleTimeString();
+            payload.duracion = durationH;
+            payload.lat_fin = data.endGeo ? data.endGeo.lat : "";
+            payload.lng_fin = data.endGeo ? data.endGeo.lng : "";
+        }
+
+        await fetch(GOOGLE_SHEETS_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            cache: 'no-cache',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        console.log(`Sincronización ${action} enviada.`);
+
+    } catch (error) {
+        console.error('Error enviando a Google Sheets:', error);
+        // Podríamos guardar en cola para reintentar si no hay internet (Pendiente v3.1)
+    }
+}
+
+// -------------------------------------------------------------------------
+// MODIFICACIONES EN EL FLUJO DE LA APP PARA LLAMAR A SYNC
+// -------------------------------------------------------------------------
+
+// EN SUBMIT DE FORMULARIOS: Llamar a 'start'
+// Modificar saveAndShowActive para aceptar flag de 'isNew'
+function saveAndShowActive(isNew = false) {
     localStorage.setItem('dp_active_session', JSON.stringify(activeSession));
     showActiveSession();
+
+    // Si es nuevo inicio, sincronizar
+    if (isNew) {
+        syncWithCloud('start', activeSession);
+    }
 }
 
 // FINALIZAR
@@ -381,9 +457,8 @@ finishBtn.addEventListener('click', async () => {
     localStorage.setItem('dp_history', JSON.stringify(history));
     localStorage.removeItem('dp_active_session');
 
-    if (GOOGLE_SHEETS_URL) {
-        sendToGoogleSheets(entry);
-    }
+    // SYNC FINISH
+    await syncWithCloud('finish', entry);
 
     activeSession = null;
     finishBtn.textContent = "Finalizar Supervisión";
@@ -394,51 +469,8 @@ finishBtn.addEventListener('click', async () => {
 
     acpForm.reset();
     startForm.reset();
-
-    // Resetear fecha a hoy (los resets borran el value)
     document.querySelectorAll('input[type="date"]').forEach(input => input.valueAsDate = new Date());
 });
-
-async function sendToGoogleSheets(data) {
-    try {
-        const durationH = (data.duration / 3600000).toFixed(2);
-
-        const payload = {
-            fecha: data.date,
-            tipo_registro: data.type === 'OD' ? 'Oficina Desconcentrada' : 'Sede Central',
-            turno: data.shift || "",
-            oficina: data.office,
-            supervisor: data.name,
-            nombre_protesta: data.protestName || "",
-            categoria: data.category,
-            punto: data.location,
-            inicio: new Date(data.startTime).toLocaleTimeString(),
-            fin: new Date(data.endTime).toLocaleTimeString(),
-            lat_inicio: data.startGeo ? data.startGeo.lat : "",
-            lng_inicio: data.startGeo ? data.startGeo.lng : "",
-            lat_fin: data.endGeo ? data.endGeo.lat : "",
-            lng_fin: data.endGeo ? data.endGeo.lng : "",
-            duracion: durationH,
-            fin_de_semana: data.isWeekend ? 'Sí' : 'No',
-            archivo: data.mediaFile || "",
-            mediaData: data.mediaData || "",
-            mediaType: data.mediaType || "",
-            observaciones: data.observations || "",
-            sessionId: data.sessionId || "",
-            incidencias: data.incidents || []
-        };
-
-        fetch(GOOGLE_SHEETS_URL, {
-            method: 'POST',
-            mode: 'no-cors',
-            cache: 'no-cache',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        });
-    } catch (error) {
-        console.error('Error enviando a Google Sheets:', error);
-    }
-}
 
 function isWeekend(date) {
     const day = date.getDay();
@@ -593,9 +625,15 @@ saveIncidentBtn.addEventListener('click', async () => {
         };
 
         activeSession.incidents.push(newIncident);
-        saveAndShowActive(); // Guarda en localStorage y refresca
+        saveAndShowActive(); // Guarda en localStorage
 
-        // Renderizar Timeline (aunque showActiveSession lo llame, lo forzamos aquí también si queremos)
+        // SYNC INCIDENT
+        syncWithCloud('incident', activeSession, {
+            new_incident: newIncident,
+            all_incidents: activeSession.incidents
+        });
+
+        // Renderizar Timeline
         renderTimeline();
 
         incidentModal.classList.add('hidden-modal');
