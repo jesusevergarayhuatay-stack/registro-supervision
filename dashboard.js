@@ -73,28 +73,45 @@ function populateProtestFilter(data) {
     filterProtest.value = currentVal;
 }
 
+// Helper para buscar propiedades de forma flexible (case insensitive, variaciones)
+function getProp(item, keys) {
+    for (let key of keys) {
+        // Búsqueda directa
+        if (item[key] !== undefined) return item[key];
+        // Búsqueda normalizada
+        const keyNorm = key.toLowerCase().replace(/ /g, '_');
+        if (item[keyNorm] !== undefined) return item[keyNorm];
+    }
+    return ""; // Si no encuentra, retorna vacío para no mostrar "undefined"
+}
+
 function renderDashboard() {
-    const selectedDate = filterDate.value; // YYYY-MM-DD
+    const selectedDate = filterDate.value;
     const selectedRegion = filterRegion.value;
     const selectedProtest = filterProtest.value;
 
-    // Filtrar
     const filtered = allData.filter(item => {
-        // Normalizar fecha
-        let itemDateStr = item.fecha;
-        if (itemDateStr && itemDateStr.includes('T')) itemDateStr = itemDateStr.split('T')[0];
+        // Obtener fecha de forma segura
+        let rawDate = getProp(item, ['fecha', 'Date', 'Fecha']);
+        if (!rawDate) return false;
+
+        let itemDateStr = rawDate;
+        if (typeof rawDate === 'string' && rawDate.includes('T')) {
+            itemDateStr = rawDate.split('T')[0];
+        }
+
+        const type = getProp(item, ['tipo_registro', 'Tipo', 'Tipo Registro']);
+        const protest = getProp(item, ['nombre_protesta', 'Protesta', 'Nombre Protesta']);
 
         const dateMatch = !selectedDate || itemDateStr === selectedDate;
-        const regionMatch = !selectedRegion || item.tipo_registro === selectedRegion;
-        const protestMatch = !selectedProtest || item.nombre_protesta === selectedProtest;
+        const regionMatch = !selectedRegion || type === selectedRegion;
+        const protestMatch = !selectedProtest || protest === selectedProtest;
 
         return dateMatch && regionMatch && protestMatch;
     });
 
-    // Actualizar Estadísticas
     updateStats(filtered);
 
-    // Renderizar Lista
     reportsList.innerHTML = '';
     if (filtered.length === 0) {
         reportsList.innerHTML = '<div class="empty-msg">No se encontraron reportes para este filtro.</div>';
@@ -105,18 +122,29 @@ function renderDashboard() {
         const card = document.createElement('div');
         card.className = 'report-card';
 
-        // Parsear incidencias
+        // Obtener datos usando el Helper
+        const punto = getProp(item, ['punto', 'Punto de Supervisión', 'Ubicación', 'Lugar', 'punto_/_ubicación', 'punto_ubicación']) || "Punto no especificado";
+        const oficina = getProp(item, ['oficina', 'Oficina', 'Sede']);
+        const supervisor = getProp(item, ['supervisor', 'Nombre Supervisor', 'Responsable', 'Nombre Comisionado']);
+        const inicio = getProp(item, ['inicio', 'Hora Inicio', 'Start']);
+        const fin = getProp(item, ['fin', 'Hora Fin', 'End']) || "En curso";
+        const categoria = getProp(item, ['categoria', 'Categoria']);
+        const nombreProtesta = getProp(item, ['nombre_protesta', 'Protesta']);
+        const obs = getProp(item, ['observaciones', 'Observaciones', 'Obs']);
+        const archivo = getProp(item, ['archivo', 'Foto Principal', 'Media', 'archivo_/_foto']);
+
+        // Incidencias
+        let rawIncidents = getProp(item, ['incidencias', 'Incidencias JSON', 'Incidencias', 'incidencias_json']);
         let incidentsArray = [];
-        if (Array.isArray(item.incidencias)) {
-            incidentsArray = item.incidencias;
-        } else if (typeof item.incidencias === 'string' && item.incidencias.startsWith('[')) {
-            try { incidentsArray = JSON.parse(item.incidencias); } catch (e) { }
+        if (Array.isArray(rawIncidents)) {
+            incidentsArray = rawIncidents;
+        } else if (typeof rawIncidents === 'string' && rawIncidents.startsWith('[')) {
+            try { incidentsArray = JSON.parse(rawIncidents); } catch (e) { }
         }
 
         const incidentCount = incidentsArray.length;
         const hasIncidents = incidentCount > 0;
 
-        // Construir HTML de las incidencias
         let incidentsHtml = '';
         if (hasIncidents) {
             incidentsHtml = `<div style="margin-top: 15px; padding-top: 10px; border-top: 1px solid #eee;">
@@ -134,27 +162,26 @@ function renderDashboard() {
             ? `<span class="badge" style="background: #e67e22;">${incidentCount} Incidencias</span>`
             : `<span class="badge" style="background: #16a34a;">Sin Novedad</span>`;
 
-        // Observación general
-        const obsHtml = item.observaciones
-            ? `<p style="margin-top:10px; font-style:italic; color:#444; background:#f8fafc; padding:8px; border-radius:6px;">"${item.observaciones}"</p>`
+        const obsHtml = obs
+            ? `<p style="margin-top:10px; font-style:italic; color:#444; background:#f8fafc; padding:8px; border-radius:6px;">"${obs}"</p>`
             : '';
 
         card.innerHTML = `
             <div>
-                <h3>${item.punto} <span style="font-weight:400; color:#666;">(${item.oficina})</span></h3>
+                <h3>${punto} <span style="font-weight:400; color:#666;">(${oficina})</span></h3>
                 <div class="report-meta">
-                    <span>👤 ${item.supervisor}</span>
-                    <span>🕒 ${item.inicio} - ${item.fin}</span>
-                    <span>${item.categoria}</span>
+                    <span>👤 ${supervisor}</span>
+                    <span>🕒 ${inicio} - ${fin}</span>
+                    <span>${categoria}</span>
                 </div>
-                ${item.nombre_protesta ? `<div style="margin-top:5px; font-weight:500;">🚩 ${item.nombre_protesta}</div>` : ''}
+                ${nombreProtesta ? `<div style="margin-top:5px; font-weight:500;">🚩 ${nombreProtesta}</div>` : ''}
                 
                 ${obsHtml}
                 ${incidentsHtml}
             </div>
             <div style="display:flex; flex-direction:column; align-items:flex-end; gap:10px;">
                 ${statusBadge}
-                ${item.archivo ? `<a href="#" style="font-size:0.9rem;">📷 Foto General</a>` : ''}
+                ${archivo ? `<a href="#" style="font-size:0.9rem;">📷 Foto General</a>` : ''}
             </div>
         `;
         reportsList.appendChild(card);
@@ -164,14 +191,15 @@ function renderDashboard() {
 function updateStats(data) {
     statTotal.textContent = data.length;
 
-    const uniqueSupervisors = new Set(data.map(d => d.supervisor)).size;
+    const uniqueSupervisors = new Set(data.map(d => getProp(d, ['supervisor', 'Nombre Comisionado']))).size;
     statSupervisors.textContent = uniqueSupervisors;
 
     let totalIncidents = 0;
     data.forEach(d => {
-        if (Array.isArray(d.incidencias)) totalIncidents += d.incidencias.length;
-        else if (typeof d.incidencias === 'string' && d.incidencias.startsWith('[')) {
-            try { totalIncidents += JSON.parse(d.incidencias).length; } catch (e) { }
+        let rawIncidents = getProp(d, ['incidencias', 'Incidencias JSON', 'incidencias_json']);
+        if (Array.isArray(rawIncidents)) totalIncidents += rawIncidents.length;
+        else if (typeof rawIncidents === 'string' && rawIncidents.startsWith('[')) {
+            try { totalIncidents += JSON.parse(rawIncidents).length; } catch (e) { }
         }
     });
     statIncidents.textContent = totalIncidents;
