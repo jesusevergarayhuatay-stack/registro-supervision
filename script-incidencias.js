@@ -47,9 +47,16 @@ function init() {
     history = JSON.parse(localStorage.getItem('dp_history')) || [];
 
     // Poner la fecha de hoy por defecto
+    // Poner la fecha de hoy por defecto (Corregido para Zona Horaria Local)
     const dateInputs = document.querySelectorAll('input[type="date"]');
+    const now = new Date();
+    // Ajustar a zona horaria local restando el offset (en minutos)
+    const localDate = new Date(now.getTime() - (now.getTimezoneOffset() * 60000))
+        .toISOString()
+        .split('T')[0];
+
     dateInputs.forEach(input => {
-        input.valueAsDate = new Date();
+        input.value = localDate;
     });
 
     if (activeSession) {
