@@ -348,6 +348,17 @@
                 <p><strong>GPS Inicio:</strong> <span id="display-start-geo">Pendiente...</span></p>
             </div>
             <div class="timer" id="timer">00:00:00</div>
+
+            <!-- Incidencias -->
+            <div class="incident-actions" style="margin: 20px 0; text-align: center;">
+                <button id="add-incident-btn" class="btn-primary"
+                    style="background-color: #f39c12; border-color: #e67e22;">
+                    🚩 Registrar Incidencia
+                </button>
+            </div>
+            <div id="incidents-timeline" class="timeline-container">
+                <!-- Se llena dinámicamente -->
+            </div>
             <div class="form-group">
                 <p class="geo-hint" style="color: #666; font-size: 0.9em; margin-bottom: 10px; text-align: center;">📍
                     Al finalizar se registrará tu ubicación final.</p>
@@ -368,9 +379,38 @@
         </section>
     </main>
 
+    <!-- Modal Incidencias -->
+    <div id="incident-modal" class="modal hidden-modal">
+        <div class="modal-content">
+            <h3>Nueva Incidencia</h3>
+            <div class="form-group">
+                <label for="incident-time">Hora del evento</label>
+                <input type="time" id="incident-time" readonly>
+            </div>
+            <div class="form-group">
+                <textarea id="incident-desc" placeholder="Describe lo que está pasando..." rows="4"
+                    style="width: 100%; padding: 10px;"></textarea>
+            </div>
+            <div class="form-group">
+                <label class="btn-secondary" style="display: block; text-align: center; margin-bottom: 5px;">
+                    📷 Tomar Foto (Opcional)
+                    <input type="file" id="incident-photo" accept="image/*" capture="environment"
+                        style="display: none;">
+                </label>
+                <div id="incident-photo-name" style="text-align: center; font-size: 0.8rem; color: #666;">Sin archivo
+                </div>
+            </div>
+            <div class="modal-actions" style="display: flex; gap: 10px; justify-content: space-between;">
+                <button id="cancel-incident-btn" class="btn-secondary"
+                    style="background-color: #95a5a6;">Cancelar</button>
+                <button id="save-incident-btn" class="btn-primary">Guardar</button>
+            </div>
+        </div>
+    </div>
+
     <script src="app.js"></script>
     <div style="text-align: center; font-size: 0.8rem; color: #666; padding: 10px;">
-        v1.4 - Actualizado: 30/01/2026 02:30 AM
+        v2.0 - Incidencias Activas
     </div>
 </body>
 

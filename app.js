@@ -8,7 +8,7 @@ if ('serviceWorker' in navigator) {
 }
 
 // CONFIGURACIÓN: Reemplaza esto con la URL que obtendrás de Google Apps Script
-const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbw9PEFhRsWhG07EcBpnriKwB9rV-pHkgYnDLavGuO7knL_Os9OPwQW5Df2nDalazHpdIQ/exec";
+const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbyU39crOG9YAY5gOoVo7FSHXoaV0M7YSYNebqkKLm-qNyvbA3gLVZX1LaTsDZC05OFAWg/exec";
 const ADMIN_PASSWORD = "Defensoria2026";
 
 // Variables de Estado
@@ -286,7 +286,9 @@ acpForm.addEventListener('submit', async (e) => {
             startTime: startDateTime.getTime(),
             startGeo: geo,
             shift: "",
-            protestName: ""
+            protestName: "",
+            sessionId: generateSessionId(),
+            incidents: []
         };
 
         saveAndShowActive();
@@ -339,7 +341,9 @@ startForm.addEventListener('submit', async (e) => {
             mediaType: fileData.type,
             observations: document.getElementById('observations').value,
             startTime: startDateTime.getTime(),
-            startGeo: geo
+            startGeo: geo,
+            sessionId: generateSessionId(),
+            incidents: []
         };
 
         saveAndShowActive();
@@ -419,7 +423,9 @@ async function sendToGoogleSheets(data) {
             archivo: data.mediaFile || "",
             mediaData: data.mediaData || "",
             mediaType: data.mediaType || "",
-            observaciones: data.observations || ""
+            observaciones: data.observations || "",
+            sessionId: data.sessionId || "",
+            incidencias: data.incidents || []
         };
 
         fetch(GOOGLE_SHEETS_URL, {
@@ -510,5 +516,121 @@ exportBtn.addEventListener('click', () => {
     link.click();
     document.body.removeChild(link);
 });
+
+// --- LÓGICA DE INCIDENCIAS ---
+
+function generateSessionId() {
+    return 'SUP-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
+}
+
+// Elementos Modal Incidencia
+const addIncidentBtn = document.getElementById('add-incident-btn');
+const incidentModal = document.getElementById('incident-modal');
+const cancelIncidentBtn = document.getElementById('cancel-incident-btn');
+const saveIncidentBtn = document.getElementById('save-incident-btn');
+const incidentTimeInput = document.getElementById('incident-time');
+const incidentDescInput = document.getElementById('incident-desc');
+const incidentPhotoInput = document.getElementById('incident-photo');
+const incidentPhotoName = document.getElementById('incident-photo-name');
+const timelineContainer = document.getElementById('incidents-timeline');
+
+// Abrir Modal
+addIncidentBtn.addEventListener('click', () => {
+    incidentModal.classList.remove('hidden-modal');
+    // Set hora actual
+    const now = new Date();
+    const h = now.getHours().toString().padStart(2, '0');
+    const m = now.getMinutes().toString().padStart(2, '0');
+    incidentTimeInput.value = `${h}:${m}`;
+
+    // Reset campos
+    incidentDescInput.value = "";
+    incidentPhotoInput.value = "";
+    incidentPhotoName.textContent = "Sin archivo";
+});
+
+// Cerrar Modal
+cancelIncidentBtn.addEventListener('click', () => {
+    incidentModal.classList.add('hidden-modal');
+});
+
+// Mostrar nombre de archivo
+incidentPhotoInput.addEventListener('change', () => {
+    if (incidentPhotoInput.files[0]) {
+        incidentPhotoName.textContent = "📄 " + incidentPhotoInput.files[0].name;
+    } else {
+        incidentPhotoName.textContent = "Sin archivo";
+    }
+});
+
+// Guardar Incidencia
+saveIncidentBtn.addEventListener('click', async () => {
+    const desc = incidentDescInput.value.trim();
+    if (!desc) {
+        alert("Por favor describe la incidencia.");
+        return;
+    }
+
+    saveIncidentBtn.textContent = "Guardando...";
+    saveIncidentBtn.disabled = true;
+
+    try {
+        const time = incidentTimeInput.value;
+        const file = incidentPhotoInput.files[0];
+        let fileData = { base64: "", name: "", type: "" };
+
+        if (file) {
+            fileData = await readFileAndCompress(file);
+        }
+
+        const newIncident = {
+            id: Date.now(),
+            time: time,
+            description: desc,
+            fileName: fileData.name,
+            mediaData: fileData.base64,
+            mediaType: fileData.type
+        };
+
+        activeSession.incidents.push(newIncident);
+        saveAndShowActive(); // Guarda en localStorage y refresca
+
+        // Renderizar Timeline (aunque showActiveSession lo llame, lo forzamos aquí también si queremos)
+        renderTimeline();
+
+        incidentModal.classList.add('hidden-modal');
+
+    } catch (err) {
+        console.error(err);
+        alert("Error al guardar incidencia: " + err.message);
+    } finally {
+        saveIncidentBtn.textContent = "Guardar";
+        saveIncidentBtn.disabled = false;
+    }
+});
+
+function renderTimeline() {
+    if (!activeSession || !activeSession.incidents) {
+        timelineContainer.innerHTML = "";
+        return;
+    }
+
+    // Ordenar por hora (aunque ya deberían estar ordenados)
+    // Se asume inserción cronológica
+    timelineContainer.innerHTML = activeSession.incidents.map(inc => `
+        <div class="timeline-item">
+            <div class="timeline-time">${inc.time}</div>
+            <div class="timeline-desc">${inc.description}</div>
+            ${inc.fileName ? `<div class="timeline-photo">📎 ${inc.fileName}</div>` : ''}
+        </div>
+    `).join('');
+}
+
+// Hookear renderTimeline en showActiveSession
+const originalShowActiveSession = showActiveSession;
+showActiveSession = function () {
+    originalShowActiveSession();
+    renderTimeline();
+};
 
 init();
